@@ -4,7 +4,7 @@
 
 - **1.1 系统架构图**
 
-  <div align=center><img src="resources/pic/v2.0架构.png" width="100%" height="100%"></div>
+  <div align=center><img src="D:\大三上学期录屏\网课自学\大数据\flink-recommandSystem-demo\resources\pic\v2.0架构.png" width="100%" height="100%"></div>
 
 - **1.2模块说明**
 
@@ -70,7 +70,7 @@
 
   现阶段推荐逻辑图
 
-<div align=center><img src="resources/pic/v2.0用户推荐流程.png" width="80%" height="100%"></div>
+<div align=center><img src="D:\大三上学期录屏\网课自学\大数据\flink-recommandSystem-demo\resources/pic/v2.0用户推荐流程.png" width="80%" height="100%"></div>
 
 ​    根据用户特征，重新排序热度榜，之后根据两种推荐算法计算得到的产品相关度评分，为每个热度榜中的产品推荐几个关联的产品
 
@@ -78,7 +78,7 @@
 
   基于产品画像的推荐逻辑依赖于产品画像和热度榜两个维度,产品画像有三个特征,包含color/country/style三个角度,通过计算用户对该类目产品的评分来过滤热度榜上的产品
 
-  <div align=center><img src="resources/pic/基于产品画像的推荐逻辑.png" width="80%" height="100%"></div>
+  <div align=center><img src="D:\大三上学期录屏\网课自学\大数据\flink-recommandSystem-demo\resources/pic/基于产品画像的推荐逻辑.png" width="80%" height="100%"></div>
 
   在已经有产品画像的基础上,计算item与item之间的关联系,通过**余弦相似度**来计算两两之间的评分,最后在已有物品选中的情况下推荐关联性更高的产品.
 
@@ -94,21 +94,21 @@
 
   根据产品用户表（Hbase） 去计算公式得到相似度评分：
 
-  <img src="resources/pic/%E5%9F%BA%E4%BA%8E%E7%89%A9%E5%93%81%E7%9A%84%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E5%85%AC%E5%BC%8F.svg" width="30%" height="30%">
+  <img src="D:\大三上学期录屏\网课自学\大数据\flink-recommandSystem-demo\resources/pic/%E5%9F%BA%E4%BA%8E%E7%89%A9%E5%93%81%E7%9A%84%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E5%85%AC%E5%BC%8F.svg" width="30%" height="30%">
                  
 
 ### 3. 前台推荐页面
 
 ​ 当前推荐结果分为3列,分别是热度榜推荐,协同过滤推荐和产品画像推荐
 
-<div align=center><img src="resources/pic/推荐页面.png" width="80%" height="100%"></div>
+<div align=center><img src="D:\大三上学期录屏\网课自学\大数据\flink-recommandSystem-demo\resources/pic/推荐页面.png" width="80%" height="100%"></div>
 
 ### 4. 后台数据大屏
 
 ​ **在后台上显示推荐系统的实时数据**,数据来自其他Flink计算模块的结果.目前包含热度榜和1小时日志接入量两个指标. 
 真实数据位置在resource/database.sql
 
-<div align=center><img src="resources/pic/后台数据.png" width="80%" height="100%"></div>
+<div align=center><img src="D:\大三上学期录屏\网课自学\大数据\flink-recommandSystem-demo\resources/pic/后台数据.png" width="80%" height="100%"></div>
 
 ### 5. 部署说明 
 >以下的部署均使用Docker，对于搭建一套复杂的系统，使用docker来部署各种服务中间件再合适不过了。这里有一套简单的[Docker入门系列](https://blog.csdn.net/qqHJQS/column/info/33078)
