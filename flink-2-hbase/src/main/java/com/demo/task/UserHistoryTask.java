@@ -1,6 +1,6 @@
 package com.demo.task;
 
-import com.demo.map.UserHistoryMapFunctory;
+import com.demo.map.UserHistoryMapFunction;
 import com.demo.util.Property;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -17,7 +17,7 @@ public class UserHistoryTask {
 
         Properties properties = Property.getKafkaProperties("history");
         DataStreamSource<String> dataStream = env.addSource(new FlinkKafkaConsumer<String>("history", new SimpleStringSchema(), properties));
-        dataStream.map(new UserHistoryMapFunctory());
+        dataStream.map(new UserHistoryMapFunction());
 
         env.execute("User Product History");
     }

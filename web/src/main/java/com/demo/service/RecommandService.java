@@ -14,5 +14,5 @@ public interface RecommandService {
      * @return
      * @throws IOException
      */
-    public List<ProductScoreEntity> userRecommand(String userId) throws IOException;
+    List<ProductScoreEntity> userRecommand(String userId) throws IOException;
 }

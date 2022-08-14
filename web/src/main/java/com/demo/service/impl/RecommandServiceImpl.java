@@ -29,7 +29,7 @@ public class RecommandServiceImpl implements RecommandService {
     public List<ProductScoreEntity> userRecommand(String userId) throws IOException {
         List<ProductScoreEntity> randProduct = userScoreService.getTopRankProduct(userId);
         randProduct.sort((a, b) -> {
-            Double compare;
+            double compare;
             compare = a.getScore() - b.getScore();
             if (compare > 0){
                 return -1;
@@ -41,8 +41,11 @@ public class RecommandServiceImpl implements RecommandService {
         randProduct.forEach(r->{
             try {
                 rst.add(r);
-                List<Map.Entry> ps = HbaseClient.getRow("ps", userId);
-                int end = ps.size()>3 ? ps.size() : 3;
+                //这个地方为什么是userId？
+                String productId = String.valueOf(r.getProduct().getProductId());
+                List<Map.Entry> ps = HbaseClient.getRow("ps", productId);
+                //感觉这个地方设置成ps.size()是否有点不合适？
+                int end = Math.max(ps.size(), 3);
                 for (int i = 0; i < end; i++) {
                     Map.Entry entry = ps.get(i);
                     ProductEntity p = productService.selectById((String) entry.getKey());

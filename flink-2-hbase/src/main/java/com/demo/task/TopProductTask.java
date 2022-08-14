@@ -45,26 +45,34 @@ public class TopProductTask {
         Properties properties = Property.getKafkaProperties("topProuct");
         DataStreamSource<String> dataStream = env.addSource(new FlinkKafkaConsumer<String>("con", new SimpleStringSchema(), properties));
         List<String> top = new ArrayList<>();
-        DataStream<TopProductEntity> topProduct = dataStream.map(new TopProductMapFunction()).
-                assignTimestampsAndWatermarks(new AscendingTimestampExtractor<LogEntity>() {
+        DataStream<TopProductEntity> topProduct = dataStream
+                //将字符串log转换成logEntity类
+                .map(new TopProductMapFunction())
+                //指定时间戳
+                .assignTimestampsAndWatermarks(new AscendingTimestampExtractor<LogEntity>() {
                     @Override
                     public long extractAscendingTimestamp(LogEntity logEntity) {
                         return logEntity.getTime();
                     }
                 })
-                .keyBy("productId").timeWindow(Time.seconds(60),Time.seconds(5))
+                //根据产品Id进行分流
+                .keyBy("productId")
+                //滑动窗口
+                .timeWindow(Time.seconds(60),Time.seconds(5))
+                //预聚合，第一个参数：求操作次数总和 第二个参数：每个商品在每个窗口的点击量
                 .aggregate(new CountAgg(), new WindowResultFunction())
-                .keyBy("windowEnd").process(new TopNHotItems(topSize)).flatMap(new FlatMapFunction<List<String>, TopProductEntity>() {
-                    @Override
-                    public void flatMap(List<String> strings, Collector<TopProductEntity> collector) throws Exception {
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmm");
-                        String time = sdf.format(new Date());
-                        for (int i = 0; i < strings.size(); i++) {
-                            TopProductEntity top = new TopProductEntity();
-                            top.setRankName(String.valueOf(i));
-                            top.setWindowEnd(new Long(time));
-                            top.setProductId(Integer.parseInt(strings.get(i)));
-                        }
+                //不同商品但同一窗口的数据分到一起
+                .keyBy("windowEnd")
+                //在自定义函数中进行业务逻辑处理
+                .process(new TopNHotItems(topSize))
+                .flatMap((FlatMapFunction<List<String>, TopProductEntity>) (strings, collector) -> {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmm");
+                    String time = sdf.format(new Date());
+                    for (int i = 0; i < strings.size(); i++) {
+                        TopProductEntity top1 = new TopProductEntity();
+                        top1.setRankName(String.valueOf(i));
+                        top1.setWindowEnd(new Long(time));
+                        top1.setProductId(Integer.parseInt(strings.get(i)));
                     }
                 });
         topProduct.addSink(new RedisSink<>(conf,new TopNRedisSink()));

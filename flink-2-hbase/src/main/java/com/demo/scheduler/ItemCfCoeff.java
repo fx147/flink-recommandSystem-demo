@@ -42,7 +42,7 @@ public class ItemCfCoeff {
         int n = p1.size();
         int m = p2.size();
         int sum = 0;
-        Double total = Math.sqrt(n * m);
+        double total = Math.sqrt(n * m);
         for (Map.Entry entry : p1) {
             String key = (String) entry.getKey();
             for (Map.Entry p : p2) {
