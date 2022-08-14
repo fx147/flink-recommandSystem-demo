@@ -13,9 +13,7 @@ import java.util.List;
 @Controller
 public class BackstageController {
 
-    private RedisClient redisClient = new RedisClient();
-
-    private int topSize = 10;
+    private final RedisClient redisClient = new RedisClient();
 
     @Autowired
     ProductService productService;
@@ -26,6 +24,7 @@ public class BackstageController {
      */
     @GetMapping("/index")
     public String getBackStage(Model model){
+        int topSize = 10;
         List<String> topList = redisClient.getTopList(topSize);
         System.out.println(topList);
         List<ProductEntity> topProduct = productService.selectByIds(topList);
