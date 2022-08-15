@@ -4,9 +4,9 @@ import java.sql.*;
 
 public class MysqlClient {
 
-    private static String URL = "jdbc:mysql://localhost/con?serverTimezone=GMT%2B8";
+    private static String URL = "jdbc:mysql://150.158.13.150/con?serverTimezone=GMT%2B8";
     private static String NAME = "root";
-    private static String PASS = "root";
+    private static String PASS = "123456";
     private static Statement stmt;
     static {
         try {

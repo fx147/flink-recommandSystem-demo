@@ -17,6 +17,6 @@ public class ResultUtils {
     }
 
     public static Result fail(ResultCode resultCode) {
-        return new Result(resultCode);
+        return new Result<>(resultCode);
     }
 }
