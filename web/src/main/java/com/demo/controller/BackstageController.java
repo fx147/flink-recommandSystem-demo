@@ -31,8 +31,13 @@ public class BackstageController {
     public String getBackStage(Model model){
         // 获取 top 榜单数据
         List<String> topList = redisClient.getTopList(topSize);
-        System.out.println(topList);
+        //System.out.println(topList);
         List<ContactEntity> topProduct = productService.selectByIds(topList);
+
+        for(ContactEntity prod : topProduct){
+            System.out.println(prod.getId());
+        }
+
         model.addAttribute("topProduct", topProduct);
         return "index";
     }
