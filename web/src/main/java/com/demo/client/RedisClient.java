@@ -55,6 +55,33 @@ public class RedisClient {
 	}
 
 	/**
+	 * 在top榜单中放一些测试数据
+	 * @param productIds
+	 */
+	public void putTopList(String[] productIds){
+		for(int i = 0; i < productIds.length; i++){
+			setData(String.valueOf(i), productIds[i]);
+		}
+	}
+
+	/**
+	 * 存储元素到列表中
+	 * @param listName
+	 * @param values
+	 */
+	public void pushListData(String listName, String[] values){
+		redisTemplate.opsForList().rightPushAll(listName,values);
+	}
+
+	/**
+	 * 获取列表中的元素
+	 */
+	public List<String> getListData(String listName, long start, long stop){
+		return redisTemplate.opsForList().range(listName,start,stop);
+	}
+
+
+	/**
 	 * 获取1小时内接入量数据
 	 * @return
 	 */
