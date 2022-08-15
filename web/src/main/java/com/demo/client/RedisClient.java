@@ -27,7 +27,7 @@ public class RedisClient {
         return jedis.get(key);
     }
     
-    private String setData(String key, String value){
+    public String setData(String key, String value){
         return jedis.set(key,value);
     }
 

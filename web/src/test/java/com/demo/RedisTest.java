@@ -16,6 +16,8 @@ public class RedisTest {
     public void testRedis(){
         int topSize = 10;
         redisClient.putTopList(productIds);
+        redisClient.setData("meter","50");
+
         List<String> topList = redisClient.getTopList(topSize);
         System.out.println(topList);
     }
