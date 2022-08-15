@@ -1,98 +1,67 @@
 package com.demo.client;
 
-import com.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import redis.clients.jedis.Jedis;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ *
+ * ValueOperations：简单K-V操作
+ * SetOperations：set类型数据操作
+ * ZSetOperations：zset类型数据操作
+ * HashOperations：针对map类型的数据操作
+ * ListOperations：针对list类型的数据操作
+ *
+ *
+ * @author wangxc
+ * @date: 2019/7/19 下午10:12
+ *
+ */
 @Component
 public class RedisClient {
-    private Jedis jedis = new Jedis("150.158.13.150", 6379);
 
-    @Autowired
-    private ProductService productService;
+	@Autowired
+	private RedisTemplate<String, String> redisTemplate;
 
+	/**
+	 * 获取redis数据
+	 * @param key
+	 * @return
+	 */
+	public String getData(String key) {
+		return redisTemplate.opsForValue().get(key);
+	}
 
-    @PostConstruct //通过@PostConstruct实现初始化bean之前进行的操作
-    public void init() {
-        RedisClient redisClient = this;
-        redisClient.productService = this.productService;
-    }
+	public void setData(String key, String value) {
+		redisTemplate.opsForValue().set(key,value);
+	}
 
-    /**
-     * 获取redis数据
-     * @param key
-     * @return
-     */
-    private String getData(String key){
-        return jedis.get(key);
-    }
-    
-    public String setData(String key, String value){
-        return jedis.set(key,value);
-    }
+	/**
+	 * 获取 top 榜单
+	 * @param topRange
+	 * @return
+	 */
+	public List<String> getTopList(int topRange){
+		List<String> res = new ArrayList<>();
 
-    /**
-     * 存储元素到列表中
-     * @param listName
-     * @param values
-     */
-    public void pushData(String listName, String[] values){
-        jedis.lpush(listName,values);
-    }
+		for (int i = 0; i < topRange; i++) {
+			res.add(getData(String.valueOf(i)));
+		}
+		return res;
+	}
 
-    /**
-     * 获取列表中的数据
-     * @param listname
-     * @param start
-     * @param stop
-     * @return
-     */
-    public List<String> getListData(String listname, int start, int stop){
-        return jedis.lrange(listname,start,stop);
-    }
-
-    public void putTopList(String[] productIds){
-        for(int i = 0; i < productIds.length; i++){
-            setData(String.valueOf(i), productIds[i]);
-        }
-    }
-
-    /**
-     * 获取 top 榜单
-     * @param topRange
-     * @return
-     */
-    public List<String> getTopList(int topRange){
-        List<String> res = new ArrayList<>();
-
-        for (int i = 0; i < topRange; i++) {
-            res.add(getData(String.valueOf(i)));
-        }
-        return res;
-    }
-
-    /**
-     * 获取1小时内接入量数据
-     * @return
-     */
-    public String getMeter(){
-        return getData("meter");
-    }
+	/**
+	 * 获取1小时内接入量数据
+	 * @return
+	 */
+	public String getMeter(){
+		return getData("meter");
+	}
 
 
-    /**
-     * 测试方法
-     * @param args
-     */
-    public static void main(String[] args) {
-        RedisClient client = new RedisClient();
 
-        String data = client.getData("1");
-        System.out.println(data);
-    }
 }
