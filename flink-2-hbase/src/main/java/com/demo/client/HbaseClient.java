@@ -15,7 +15,7 @@ public class HbaseClient {
     static {
         Configuration conf = HBaseConfiguration.create();
         conf.set("hbase.rootdir", "hdfs://192.168.0.100:9000/hbase");
-        conf.set("hbase.zookeeper.quorum", "192.168.0.100");
+        conf.set("hbase.zookeeper.quorum", "150.158.13.150");
         conf.set("hbase.client.scanner.timeout.period", "1000");
         conf.set("hbase.rpc.timeout", "1000");
         try {
@@ -67,7 +67,6 @@ public class HbaseClient {
      * 获取一行的所有数据 并且排序
      * @param tableName 表名
      * @param rowKey 列名
-     * @throws IOException
      */
     public static List<Map.Entry> getRow(String tableName, String rowKey) throws IOException {
         Table table = conn.getTable(TableName.valueOf(tableName));
@@ -83,10 +82,9 @@ public class HbaseClient {
             rst.put(key, new Double(value));
         }
 
-        List<Map.Entry> ans = new ArrayList<>();
-        ans.addAll(rst.entrySet());
+        List<Map.Entry> ans = new ArrayList<>(rst.entrySet());
 
-        Collections.sort(ans, (m1,m2) -> new Double((Double)m1.getValue()-(Double) m2.getValue()).intValue());
+        ans.sort((m1, m2) -> new Double((Double) m1.getValue() - (Double) m2.getValue()).intValue());
 
         return ans;
     }
@@ -98,7 +96,6 @@ public class HbaseClient {
      * @param famliyname 列族名
      * @param column 列名
      * @param data 数据
-     * @throws Exception
      */
     public static void putData(String tablename, String rowkey, String famliyname,String column,String data) throws Exception {
         Table table = conn.getTable(TableName.valueOf(tablename));
@@ -113,13 +110,12 @@ public class HbaseClient {
      * @param rowkey 行号
      * @param famliyname 列族名
      * @param column 列名
-     * @throws Exception
      */
     public static void increamColumn(String tablename, String rowkey, String famliyname,String column) throws Exception {
         String val = getData(tablename, rowkey, famliyname, column);
         int res = 1;
         if (val != null) {
-            res = Integer.valueOf(val) + 1;
+            res = Integer.parseInt(val) + 1;
         }
         putData(tablename, rowkey, famliyname, column, String.valueOf(res));
     }

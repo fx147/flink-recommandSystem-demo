@@ -3,7 +3,7 @@ package com.demo.util;
 public class AgeUtil {
 
     public static String getAgeType(String age){
-        int number = Integer.valueOf(age);
+        int number = Integer.parseInt(age);
         if (10 <= number && number < 20){
             return "10s";}
         else if (20 <= number && number < 30){

@@ -60,14 +60,14 @@ public class ProductCoeff {
         String age_50 = HbaseClient.getData("prod", proId, "sex", Constants.AGE_50);
         String age_60 = HbaseClient.getData("prod", proId, "sex", Constants.AGE_60);
 
-        entity.setMan(Integer.valueOf(man));
-        entity.setWoman(Integer.valueOf(woman));
-        entity.setAge_10(Integer.valueOf(age_10));
-        entity.setAge_20(Integer.valueOf(age_20));
-        entity.setAge_30(Integer.valueOf(age_30));
-        entity.setAge_40(Integer.valueOf(age_40));
-        entity.setAge_50(Integer.valueOf(age_50));
-        entity.setAge_60(Integer.valueOf(age_60));
+        entity.setMan(Integer.parseInt(man));
+        entity.setWoman(Integer.parseInt(woman));
+        entity.setAge_10(Integer.parseInt(age_10));
+        entity.setAge_20(Integer.parseInt(age_20));
+        entity.setAge_30(Integer.parseInt(age_30));
+        entity.setAge_40(Integer.parseInt(age_40));
+        entity.setAge_50(Integer.parseInt(age_50));
+        entity.setAge_60(Integer.parseInt(age_60));
         return entity;
 
     }

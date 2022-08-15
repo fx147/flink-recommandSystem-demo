@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RedisClient {
-    private Jedis jedis = new Jedis("192.168.0.100", 6379);
+    private Jedis jedis = new Jedis("150.158.13.150", 6379);
 
     private static RedisClient redisClient;
 

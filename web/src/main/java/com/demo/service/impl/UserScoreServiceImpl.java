@@ -121,7 +121,7 @@ public class UserScoreServiceImpl implements UserScoreService {
         String value = HbaseClient.getData("user", userId, "style", valueName);
         int res = 0;
         if (null != value){
-            res = Integer.valueOf(value);
+            res = Integer.parseInt(value);
         }
         return res;
     }
@@ -130,8 +130,8 @@ public class UserScoreServiceImpl implements UserScoreService {
         int size = v.length;
         double total = 0.0;
         Double[] res = new Double[size];
-        for (int i = 0; i < size; i++) {
-            total += v[i];
+        for (int k : v) {
+            total += k;
         }
         if (total == 0){
             for (int j = 0; j < size; j++) {
