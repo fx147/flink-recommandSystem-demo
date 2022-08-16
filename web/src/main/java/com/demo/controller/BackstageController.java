@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -39,6 +40,7 @@ public class BackstageController {
         List<String> topList = redisClient.getTopList(topSize);
         //System.out.println(topList);
         List<ContactEntity> topProduct = contactService.selectByIds(topList);
+
         model.addAttribute("topProduct", topProduct);
         return "index";
     }
