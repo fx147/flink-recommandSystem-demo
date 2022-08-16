@@ -83,16 +83,8 @@ public class RecommandServiceImpl implements RecommandService {
         // 将产品转为dto
         for (int i = 0; i < TOP_SIZE; i++) {
             String topId = topList.get(i);
-            ProductDto dto = new ProductDto();
+            ProductDto dto = selectProductById(topId);
             dto.setScore(11-i);
-            for (int j = 0; j < TOP_SIZE; j++) {
-                if (topId.equals(String.valueOf(contactEntities.get(j).getId()))){
-                    dto.setContact(contactEntities.get(j));
-                }
-                if (topId.equals(String.valueOf(productEntities.get(j).getProductId()))){
-                    dto.setProduct(productEntities.get(j));
-                }
-            }
             ret.add(dto);
         }
         return ret;
@@ -103,11 +95,11 @@ public class RecommandServiceImpl implements RecommandService {
         List<String> topList = redisClient.getTopList(TOP_SIZE);
         List<ProductDto> dtoList = new ArrayList<>();
         for (String s : topList) {
-            List<Map.Entry> ps = HbaseClient.getRow("px", s);
+            List<Map.Entry> px = HbaseClient.getRow("px", s);
             // 只保留最相关的3个产品
-            int end = ps.size()>PRODUCT_LIMIT ? ps.size() : PRODUCT_LIMIT;
+            int end = Math.min(px.size(), PRODUCT_LIMIT);
             for (int i = 0; i < end; i++) {
-                dtoList.add(selectProductById((String) ps.get(i).getKey()));
+                dtoList.add(selectProductById((String) px.get(i).getKey()));
             }
         }
         return dtoList;
@@ -121,7 +113,7 @@ public class RecommandServiceImpl implements RecommandService {
             //获取的产品list是已经排好序的,根据得分排序
             List<Map.Entry> ps = HbaseClient.getRow("ps", s);
             // 只保留最相关的3个产品
-            int end = ps.size()>PRODUCT_LIMIT ? ps.size() : PRODUCT_LIMIT;
+            int end = Math.min(ps.size(), PRODUCT_LIMIT);
             for (int i = 0; i < end; i++) {
                 dtoList.add(selectProductById((String) ps.get(i).getKey()));
             }
@@ -135,7 +127,7 @@ public class RecommandServiceImpl implements RecommandService {
      * @param id
      * @return
      */
-    private ProductDto selectProductById(String id){
+    public ProductDto selectProductById(String id){
         ProductEntity productEntity = productService.selectById(id);
         ContactEntity contactEntity = contactService.selectById(id);
         ProductDto dto = new ProductDto();

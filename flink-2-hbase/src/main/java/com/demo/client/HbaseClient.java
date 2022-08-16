@@ -69,23 +69,41 @@ public class HbaseClient {
      * @param rowKey 列名
      */
     public static List<Map.Entry> getRow(String tableName, String rowKey) throws IOException {
+        HashMap<String, Double> rst = new HashMap<>();
+        List<Map.Entry> ans = new ArrayList<>(rst.entrySet());
+
         Table table = conn.getTable(TableName.valueOf(tableName));
         byte[] row = Bytes.toBytes(rowKey);
+
         Get get = new Get(row);
         Result r = table.get(get);
+        if(r.size() == 0){
+            System.out.println("r.size()===>"+r.size());
+            return ans;
+        }
 
-        HashMap<String, Double> rst = new HashMap<>();
-
+        System.out.println("listCells====> !null");
         for (Cell cell : r.listCells()){
             String key = Bytes.toString(cell.getQualifierArray(),cell.getQualifierOffset(),cell.getQualifierLength());
             String value = Bytes.toString(cell.getValueArray(),cell.getValueOffset(),cell.getValueLength());
             rst.put(key, new Double(value));
         }
 
-        List<Map.Entry> ans = new ArrayList<>(rst.entrySet());
-
+        ans = new ArrayList<>(rst.entrySet());
+        for(int i = 0; i < ans.size(); i++){
+            System.out.println(
+                    "productId===>"+ans.get(i).getKey()+
+                    "  score===>"+ans.get(i).getValue()
+            );
+        }
         ans.sort((m1, m2) -> new Double((Double) m1.getValue() - (Double) m2.getValue()).intValue());
-
+        System.out.println("==================");
+        for(int i = 0; i < ans.size(); i++){
+            System.out.println(
+                    "productId===>"+ans.get(i).getKey()+
+                    "  score===>"+ans.get(i).getValue()
+            );
+        }
         return ans;
     }
 
