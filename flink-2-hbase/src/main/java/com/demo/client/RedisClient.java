@@ -7,14 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RedisClient {
-    private static Jedis jedis;
+    private static final Jedis jedis;
 
     static {
     	jedis = new Jedis(Property.getStrValue("redis.host"), Property.getIntValue("redis.port"));
 		jedis.select(Property.getIntValue("redis.db"));
 	}
-
-    private static RedisClient redisClient;
 
 
     private String getData(String key){

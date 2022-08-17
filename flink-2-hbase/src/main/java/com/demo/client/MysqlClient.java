@@ -6,18 +6,16 @@ import java.sql.*;
 
 public class MysqlClient {
 
-    private static String URL = Property.getStrValue("mysql.url");
-    private static String NAME = Property.getStrValue("mysql.name");
-    private static String PASS = Property.getStrValue("mysql.pass");
+    private static final String URL = Property.getStrValue("mysql.url");
+    private static final String NAME = Property.getStrValue("mysql.name");
+    private static final String PASS = Property.getStrValue("mysql.pass");
     private static Statement stmt;
     static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(URL, NAME, PASS);
             stmt = conn.createStatement();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
